@@ -4,7 +4,7 @@ from GRE_quiz.quiz_maker import quiz_maker
 import sys
 import time
 
-token = os.environ["SLACK_BOT_TOKEN"]
+token = os.environ["SLACK_API_TOKEN"]
 slack = Slacker(token)
 quiz_maker = quiz_maker("GRE_quiz/data")
 
@@ -67,6 +67,6 @@ def make_message(question_type):
         slack.chat.post_message("#test", '[%s] GRE Daily Quiz - %s' % (current_time, question_type.upper()), attachments=[message])
         break
 
-if __name__=="__main__":
+if __name__== "__main__":
     question_type = sys.argv[1]
     make_message(question_type)

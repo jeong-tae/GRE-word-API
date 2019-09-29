@@ -1,4 +1,11 @@
+#data
+*data*
+
+
+#temporal
 *.swp
-*/data*
-.token
 *__pycache__*
+
+
+#
+.token
