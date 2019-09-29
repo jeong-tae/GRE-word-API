@@ -1,1 +1,1 @@
-# GRE-word-KAKAO_API
+# GRE-word-SLACK API
