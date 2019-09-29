@@ -13,7 +13,7 @@ class quiz_maker(object):
                         self.wordset[word].append(line.rstrip().split("\t"))
                     else:
                         self.wordset[word] = [line.rstrip().split("\t")]
-        self.word_list = self.wordset.keys()
+        self.word_list = list(self.wordset.keys())
         self.sample_size = 5
         self.question_type = ""
         self.field = 2
@@ -37,7 +37,9 @@ class quiz_maker(object):
         return js1*js2
 
     def select_candid(self, word):
-        return sorted(self.word_list, key=lambda x: self.jaccard_sim(word, x), reverse=True)
+        word_pool = self.word_list
+        word_pool.remove(word) 
+        return sorted(word_pool, key=lambda x: self.jaccard_sim(word, x), reverse=True)
     
     def filter_by_field(self, data):
         filtered = []
