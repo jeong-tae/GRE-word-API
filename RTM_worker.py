@@ -2,7 +2,7 @@ import os
 import slack
 
 from send_quiz import make_message
-quiz_type = ['word', 'meaning', 'cloze', 'synonyms']
+quiz_types = ['cloze', 'synonyms', 'meaning', 'word']
 
 @slack.RTMClient.run_on(event='member_joined_channel')
 def say_hello(**payload):
@@ -24,31 +24,21 @@ def word_test(**payload):
     web_client = payload['web_client']
     rtm_client = payload['rtm_client']
 
-    text = data.get('text', '').lower()
-    channel_id = data['channel']
+    user_message = data.get('text', '').lower()
 
-    if text in quiz_type:
+    if user_message in quiz_types:
+        channel_id = data['channel']
+        attachments = make_message(user_message)
 
-        attachments = make_message(text)
-        #user = data['user']
-
-        for attachment in attachments:
-            web_client.chat_postMessage(
-                channel=channel_id,
-                text = "GRE Quiz - %s"%text.upper(),
-                attachments=attachments[0],
-                #thread_ts=thread_ts
-            )
-    else:
         web_client.chat_postMessage(
             channel=channel_id,
-            #text = "Invalid text, can't recognize command: %s\n Type command in [%s]" % (text, ', '.join(quiz_type))
-            text = "asdfasdf??",
-            attachments=[]
+            text = "GRE Quiz - %s"%user_message,
+            attachments=attachments,
         )
 
+    print("Got message: %s"%user_message)
+    #print("User: %s"%data['user'])
 
-if __name__ == "__main__":
-    slack_token = os.environ["SLACK_API_TOKEN"]
-    rtm_client = slack.RTMClient(token=slack_token)
-    rtm_client.start()
+slack_token = os.environ["SLACK_API_TOKEN"]
+rtm_client = slack.RTMClient(token=slack_token)
+rtm_client.start()

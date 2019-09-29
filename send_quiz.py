@@ -66,13 +66,7 @@ def make_message(question_type):
         message_list.append(message)
     return message_list
 
-<<<<<<< HEAD
-if __name__== "__main__":
-    question_type = sys.argv[1]
-    make_message(question_type)
-=======
 if __name__=="__main__":
     question_type = sys.argv[1].lower()
     messages = make_message(question_type)
     slack.chat.post_message("#test", 'GRE Daily Quiz - %s' % (question_type.upper()), attachments=messages)
->>>>>>> 20975bf9f3be2093b14cf91033be0c0a657ca236
