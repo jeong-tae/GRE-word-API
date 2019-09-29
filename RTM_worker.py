@@ -26,6 +26,11 @@ def word_test(**payload):
 
     user_message = data.get('text', '').lower()
 
+    if "user" in data:
+        print("Got message: %s"%user_message)
+    else:
+        return
+
     if user_message in quiz_types:
         channel_id = data['channel']
         attachments = make_message(user_message)
@@ -35,8 +40,6 @@ def word_test(**payload):
             text = "GRE Quiz - %s"%user_message,
             attachments=attachments,
         )
-
-    print("Got message: %s"%user_message)
     #print("User: %s"%data['user'])
 
 slack_token = os.environ["SLACK_API_TOKEN"]

@@ -26,6 +26,9 @@ class quiz_maker(object):
         elif self.question_type == "synonyms":
             self.sample_size = 2
             self.field = 4
+        else:
+            self.sample_size = 5
+            self.field = 2
 
     def jaccard_sim(self, w1, w2):
         w1 = w1.replace(" ", "").replace(",", "").replace(";", "")
