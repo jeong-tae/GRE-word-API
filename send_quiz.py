@@ -51,6 +51,7 @@ def make_message(question_type):
         raise(ValueError, "Type the question type: word, meaning, cloze, synonyms")
 
     candidates = quiz_maker.create_candid_pool()
+    message_list = []
 
     for candidate in candidates.items():
         message = dict()
@@ -62,11 +63,16 @@ def make_message(question_type):
         for candid_info in quiz_candids:
             msg_cand_mean = make_action_form(target_info, candid_info, question_type)
             message["actions"].append(msg_cand_mean)
-        clock = time.localtime(time.time())
-        current_time = "%s-%s-%s-%s:%s" % (clock.tm_year,clock.tm_mon,clock.tm_mday,clock.tm_hour,clock.tm_min)
-        slack.chat.post_message("#test", '[%s] GRE Daily Quiz - %s' % (current_time, question_type.upper()), attachments=[message])
-        break
+        message_list.append(message)
+    return message_list
 
+<<<<<<< HEAD
 if __name__== "__main__":
     question_type = sys.argv[1]
     make_message(question_type)
+=======
+if __name__=="__main__":
+    question_type = sys.argv[1].lower()
+    messages = make_message(question_type)
+    slack.chat.post_message("#test", 'GRE Daily Quiz - %s' % (question_type.upper()), attachments=messages)
+>>>>>>> 20975bf9f3be2093b14cf91033be0c0a657ca236
