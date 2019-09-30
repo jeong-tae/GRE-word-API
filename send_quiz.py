@@ -6,7 +6,7 @@ import time
 
 token = os.environ["SLACK_API_TOKEN"]
 slack = Slacker(token)
-quiz_maker = quiz_maker("GRE_quiz/data")
+quiz_maker = quiz_maker("./data")
 
 def make_title_text(target, q_type, question=None):
     if q_type == "word":
@@ -21,7 +21,7 @@ def make_action_form(target, candid, q_type):
         idx = 1
     else:
         idx = 0
-    msg_qa = ("Correct!", "#339CFF") if candid[idx] == target[idx] else ("Wrong!", "#FF4B33")
+    msg_qa = ("Your are good! Correct! =)", "#339CFF") if candid[idx] == target[idx] else ("Try again...", "#FF4B33")
     msg_cand_mean = {
             "name": q_type,
             "type": "button",
@@ -69,4 +69,4 @@ def make_message(question_type):
 if __name__=="__main__":
     question_type = sys.argv[1].lower()
     messages = make_message(question_type)
-    slack.chat.post_message("#test", 'GRE Daily Quiz - %s' % (question_type.upper()), attachments=messages)
+    slack.chat.post_message("#daily_quiz", 'GRE Daily Quiz - %s' % (question_type.upper()), attachments=messages)
