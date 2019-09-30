@@ -9,3 +9,6 @@
 
 #
 .token
+
+# crontab 
+run_quiz.sh
