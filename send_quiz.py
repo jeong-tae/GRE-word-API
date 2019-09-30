@@ -6,7 +6,7 @@ import time
 
 token = os.environ["SLACK_API_TOKEN"]
 slack = Slacker(token)
-quiz_maker = quiz_maker("GRE_quiz/data")
+quiz_maker = quiz_maker("./data")
 
 def make_title_text(target, q_type, question=None):
     if q_type == "word":
