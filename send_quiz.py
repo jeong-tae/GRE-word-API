@@ -6,7 +6,8 @@ import time
 
 token = os.environ["SLACK_API_TOKEN"]
 slack = Slacker(token)
-class Quiz_Maker(object):
+
+class quiz_sender(object):
     def __init__(self, data_dir):
         self.quiz_maker = quiz_maker(data_dir)
         self.candidates = dict()
@@ -69,6 +70,6 @@ class Quiz_Maker(object):
 
 if __name__=="__main__":
     question_type = sys.argv[1].lower()
-    qm = Quiz_Maker("./data") # searching words is possible. => qm.wordset[word]
+    qm = quiz_sender("./data") # searching words is possible. => qm.wordset[word]
     qm.make_message(question_type)
     slack.chat.post_message("#daily_quiz", 'GRE Daily Quiz - %s' % (question_type.upper()), attachments=qm.message_list)
