@@ -69,6 +69,6 @@ class Quiz_Maker(object):
 
 if __name__=="__main__":
     question_type = sys.argv[1].lower()
-    qm = Quiz_Maker("./data")
+    qm = Quiz_Maker("./data") # searching words is possible. => qm.wordset[word]
     qm.make_message(question_type)
     slack.chat.post_message("#test", 'GRE Daily Quiz - %s' % (question_type.upper()), attachments=qm.message_list)
