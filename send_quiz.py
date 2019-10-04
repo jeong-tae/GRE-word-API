@@ -10,8 +10,6 @@ slack = Slacker(token)
 class quiz_sender(object):
     def __init__(self, data_dir):
         self.quiz_maker = quiz_maker(data_dir)
-        self.candidates = dict()
-        self.message_list = []
 
     def make_title_text(self, target, q_type, question=None):
         if q_type == "word":
@@ -54,9 +52,10 @@ class quiz_sender(object):
         else:
             raise(ValueError, "Type the question type: word, meaning, cloze, synonyms")
 
-        self.candidates = self.quiz_maker.create_candid_pool()
+        candidates = self.quiz_maker.create_candid_pool()
+        message_list = []
 
-        for candidate in self.candidates.items():
+        for candidate in candidates.items():
             message = dict()
             target_info, wrong_answer_list, question = make_quiz_ft(candidate)
             quiz_candids = set(map(lambda x: (x[0],x[1]), wrong_answer_list))
@@ -66,10 +65,11 @@ class quiz_sender(object):
             for candid_info in quiz_candids:
                 msg_cand_mean = self.make_action_form(target_info, candid_info, question_type)
                 message["actions"].append(msg_cand_mean)    
-            self.message_list.append(message)
+            message_list.append(message)
+        return message_list
 
 if __name__=="__main__":
     question_type = sys.argv[1].lower()
     qm = quiz_sender("./data") # searching words is possible. => qm.wordset[word]
-    qm.make_message(question_type)
-    slack.chat.post_message("#daily_quiz", 'GRE Daily Quiz - %s' % (question_type.upper()), attachments=qm.message_list)
+    messages = qm.make_message(question_type)
+    slack.chat.post_message("#daily_quiz", 'GRE Daily Quiz - %s' % (question_type.upper()), attachments=messages)
