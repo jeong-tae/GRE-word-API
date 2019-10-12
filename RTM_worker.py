@@ -30,6 +30,23 @@ def word_test(**payload):
         print("Got message: %s"%user_message)
     else:
         return
+    if user_message == "priority":
+        channel_id = data['channel']
+        attachments = make_message("word")
+
+        web_client.chat_postMessage(
+            channel=channel_id,
+            text = "GRE Quiz priority - %s"%user_message,
+            attachments=attachments,
+        )
+
+        attachments = make_message("meaning")
+
+        web_client.chat_postMessage(
+            channel=channel_id,
+            text = "GRE Quiz priority - %s"%user_message,
+            attachments=attachments,
+        )
 
     if user_message in quiz_types:
         channel_id = data['channel']
