@@ -5,7 +5,7 @@ import glob
 class quiz_maker(object):
     def __init__(self, DATA_PATH):
         self.wordset = dict()
-        for data_path in glob.glob("%s/*" % DATA_PATH):
+        for data_path in glob.glob("%s*" % DATA_PATH):
             with open(data_path) as f:
                 for line in f.readlines():
                     word = line.rstrip().split("\t")[0]
@@ -14,20 +14,20 @@ class quiz_maker(object):
                     else:
                         self.wordset[word] = [line.rstrip().split("\t")]
         self.word_list = list(self.wordset.keys())
-        self.sample_size = 5
+        self.sample_size = 20
         self.question_type = ""
         self.field = 2
 
     def update_question_type(self, question_type):
         self.question_type = question_type
         if self.question_type == "cloze": 
-            self.sample_size = 2
+            self.sample_size = 5
             self.field = 3
         elif self.question_type == "synonyms":
-            self.sample_size = 2
+            self.sample_size = 5
             self.field = 4
         else:
-            self.sample_size = 5
+            self.sample_size = 20
             self.field = 2
 
     def jaccard_sim(self, w1, w2):

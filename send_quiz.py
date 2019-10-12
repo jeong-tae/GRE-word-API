@@ -24,7 +24,7 @@ class quiz_sender(object):
             idx = 1
         else:
             idx = 0
-        msg_qa = ("Your are good! Correct! =)", "#339CFF") if candid[idx] == target[idx] else ("Try again...", "#FF4B33")
+        msg_qa = "Your are good! Correct! =)" if candid[idx] == target[idx] else "Try again..."
         msg_cand_mean = {
                 "name": q_type,
                 "type": "button",
@@ -32,8 +32,7 @@ class quiz_sender(object):
                 "style": "default",
                 "value": candid[idx],
                 "confirm": {
-                    "title": msg_qa[0],
-                    "color": msg_qa[1], 
+                    "title": msg_qa,
                     "text": "    ".join(candid),
                     "dismisss_text": "Skip"
                     }
@@ -50,7 +49,7 @@ class quiz_sender(object):
         elif question_type == "synonyms":
             make_quiz_ft = self.quiz_maker.make_quiz_synonyms
         else:
-            raise(ValueError, "Type the question type: word, meaning, cloze, synonyms")
+            raise(ValueError, "Type the question type: word, meaning, cloze, synonyms, priority")
 
         candidates = self.quiz_maker.create_candid_pool()
         message_list = []
@@ -64,12 +63,20 @@ class quiz_sender(object):
             message["actions"] = []
             for candid_info in quiz_candids:
                 msg_cand_mean = self.make_action_form(target_info, candid_info, question_type)
-                message["actions"].append(msg_cand_mean)    
+                message["actions"].append(msg_cand_mean)
             message_list.append(message)
         return message_list
 
 if __name__=="__main__":
     question_type = sys.argv[1].lower()
-    qm = quiz_sender("./data") # searching words is possible. => qm.wordset[word]
-    messages = qm.make_message(question_type)
-    slack.chat.post_message("#daily_quiz", 'GRE Daily Quiz - %s' % (question_type.upper()), attachments=messages)
+    if question_type == "priority":
+        qm = quiz_sender("./data/priority") 
+        messages = qm.make_message("meaning")
+        slack.chat.post_message("#daily_quiz", 'GRE Daily Quiz - %s' % (question_type.upper()), attachments=messages)
+        messages = qm.make_message("word")
+        slack.chat.post_message("#daily_quiz", 'GRE Daily Quiz - %s' % (question_type.upper()), attachments=messages)
+    else:
+        qm = quiz_sender("./data/day*") 
+        messages = qm.make_message(question_type)
+        slack.chat.post_message("#daily_quiz", 'GRE Daily Quiz - %s' % (question_type.upper()), attachments=messages)
+    
