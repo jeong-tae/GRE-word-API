@@ -1,7 +1,9 @@
 import os
 import slack
 
-from send_quiz import make_message
+from send_quiz import quiz_sender
+qm_priority = quiz_sender("./data/priority") 
+qm_day = quiz_sender("./data/day") 
 quiz_types = ['cloze', 'synonyms', 'meaning', 'word']
 
 @slack.RTMClient.run_on(event='member_joined_channel')
@@ -32,7 +34,7 @@ def word_test(**payload):
         return
     if user_message == "priority":
         channel_id = data['channel']
-        attachments = make_message("word")
+        attachments = qm_priority.make_message("word")
 
         web_client.chat_postMessage(
             channel=channel_id,
@@ -40,7 +42,7 @@ def word_test(**payload):
             attachments=attachments,
         )
 
-        attachments = make_message("meaning")
+        attachments = qm_priority.make_message("meaning")
 
         web_client.chat_postMessage(
             channel=channel_id,
@@ -50,7 +52,7 @@ def word_test(**payload):
 
     if user_message in quiz_types:
         channel_id = data['channel']
-        attachments = make_message(user_message)
+        attachments = qm_day.make_message(user_message)
 
         web_client.chat_postMessage(
             channel=channel_id,
