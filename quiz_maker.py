@@ -81,7 +81,6 @@ class quiz_maker(object):
             i = 0
             candidates_pool[sample] = []
             for candidate in candidates:
-                if candidate == sample: continue
                 meaning_cand = list(map(lambda x: x[1], self.wordset[candidate]))
 #                s = max(map(lambda x: self.jaccard_sim(meaning.replace("하다",""), x.replace("하다","")), meaning_cand))
 #               if s > 0.3: 
