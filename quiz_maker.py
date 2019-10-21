@@ -40,7 +40,7 @@ class quiz_maker(object):
         return js1*js2
 
     def select_candid(self, word):
-        word_pool = self.word_list
+        word_pool = filter(lambda x: x!=word,self.word_list)
         return sorted(word_pool, key=lambda x: self.jaccard_sim(word, x), reverse=True)
     
     def filter_by_field(self, data):
@@ -81,7 +81,6 @@ class quiz_maker(object):
             i = 0
             candidates_pool[sample] = []
             for candidate in candidates:
-                if candidate == sample: continue
                 meaning_cand = list(map(lambda x: x[1], self.wordset[candidate]))
 #                s = max(map(lambda x: self.jaccard_sim(meaning.replace("하다",""), x.replace("하다","")), meaning_cand))
 #               if s > 0.3: 
