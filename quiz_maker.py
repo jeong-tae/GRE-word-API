@@ -40,7 +40,7 @@ class quiz_maker(object):
         return js1*js2
 
     def select_candid(self, word):
-        word_pool = self.word_list
+        word_pool = filter(lambda x: x!=word,self.word_list)
         return sorted(word_pool, key=lambda x: self.jaccard_sim(word, x), reverse=True)
     
     def filter_by_field(self, data):
