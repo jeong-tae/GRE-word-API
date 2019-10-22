@@ -41,6 +41,16 @@ class quiz_sender(object):
 
     def make_message(self,question_type):
         self.quiz_maker.update_question_type(question_type)
+        if question_type == "study":
+            message = dict()
+            make_quiz_ft = self.quiz_maker.make_study_synonyms
+            target_word, meaning, similar_words = make_quiz_ft()
+            tmp = list(map(lambda x: "*%s*: %s" % (x[0], "; ".join(map(lambda y: y[1], x[1]))), similar_words))
+            message["title"] = "\n\n".join(tmp)
+            return [message]
+
+        else:
+            pass
 
         if question_type in ["word", "meaning"]:
             make_quiz_ft = self.quiz_maker.make_quiz_meaning
@@ -49,7 +59,7 @@ class quiz_sender(object):
         elif question_type == "synonyms":
             make_quiz_ft = self.quiz_maker.make_quiz_synonyms
         else:
-            raise(ValueError, "Type the question type: word, meaning, cloze, synonyms, priority")
+            raise(ValueError, "Type the question type: word, meaning, cloze, synonyms, priority, study")
 
         candidates = self.quiz_maker.create_candid_pool()
         message_list = []
