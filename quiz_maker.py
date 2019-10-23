@@ -40,8 +40,7 @@ class quiz_maker(object):
         return js1*js2
 
     def select_candid(self, word):
-        word_pool = self.word_list
-        word_pool.remove(word) 
+        word_pool = filter(lambda x: x!=word,self.word_list)
         return sorted(word_pool, key=lambda x: self.jaccard_sim(word, x), reverse=True)
     
     def filter_by_field(self, data):
@@ -114,3 +113,9 @@ class quiz_maker(object):
         synonyms = random.choice(self.wordset[word])[3]
         wrong_answer_list = list(map(lambda x: (x, random.choice(self.wordset[x])[1]), candidates))
         return target_info, wrong_answer_list, synonyms
+    
+    def make_study_synonyms(self):
+        word = random.choice(self.word_list)
+        meaning = random.choice(list(map(lambda x: x[1], self.wordset[word])))
+        similar_words = sorted(self.wordset.items(), key=lambda x: self.jaccard_sim(meaning, x[1][0][1]), reverse=True)[:10]
+        return word, meaning, similar_words
