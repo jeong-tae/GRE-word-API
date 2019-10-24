@@ -1,6 +1,7 @@
 # encoding=utf-8
 import random
 import glob
+import numpy as np
 
 class quiz_maker(object):
     def __init__(self, DATA_PATH):
@@ -14,6 +15,7 @@ class quiz_maker(object):
                     else:
                         self.wordset[word] = [line.rstrip().split("\t")]
         self.word_list = list(self.wordset.keys())
+        self.sim_map = self.similar_word_cluster()
         self.sample_size = 20
         self.question_type = ""
         self.field = 2
@@ -29,6 +31,21 @@ class quiz_maker(object):
         else:
             self.sample_size = 20
             self.field = 2
+
+    def similar_word_cluster(self):
+        print("Build up Word Cluster...")
+        sim_map = np.zeros([len(self.word_list), len(self.word_list)])
+        k = 1
+        for i, word in enumerate(self.word_list):
+            meaning =";".join(map(lambda x: x[1], self.wordset[word]))
+            for j in range(k, len(self.word_list)):
+                cand_word = self.word_list[j]
+                cand_meaning = ";".join(map(lambda x: x[1], self.wordset[cand_word]))
+                jc = self.jaccard_sim(meaning, cand_meaning)
+                sim_map[i][j] = jc
+                sim_map[j][i] = jc
+            k += 1
+        return sim_map
 
     def jaccard_sim(self, w1, w2):
         w1 = w1.replace(" ", "").replace(",", "").replace(";", "")
@@ -115,7 +132,13 @@ class quiz_maker(object):
         return target_info, wrong_answer_list, synonyms
     
     def make_study_synonyms(self):
-        word = random.choice(self.word_list)
-        meaning = random.choice(list(map(lambda x: x[1], self.wordset[word])))
-        similar_words = sorted(self.wordset.items(), key=lambda x: self.jaccard_sim(meaning, x[1][0][1]), reverse=True)[:10]
-        return word, meaning, similar_words
+        while True:
+            idx = random.randint(0, len(self.word_list))
+            word = self.word_list[idx]
+            sim_idx_list = np.argwhere(self.sim_map[idx] > 0.7)
+            if sim_idx_list.shape[0] > 3: 
+                break
+        meaning = ";".join((map(lambda x: x[1], self.wordset[word])))
+        sim_idx_list = map(lambda x: x[0], sim_idx_list.tolist())
+        sim_word_list = list(map(lambda i: self.wordset[self.word_list[i]], sim_idx_list))
+        return word, meaning, sim_word_list
