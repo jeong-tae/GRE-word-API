@@ -19,4 +19,4 @@ Then,
 Or you can send the quiz set daily as adding a command on crontab.
 
 ### Interactive System
-![Example](/samples/gre_cloze.png)
+![Screenshot](/samples/gre_cloze.PNG)
